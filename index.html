@@ -18,35 +18,69 @@
   <canvas></canvas>
   <script>
     const canvasEl = document.querySelector('canvas'),
-      canvasCtx = canvasEl.getContext('2d')
-    const lineWidth = 15
+      canvasCtx = canvasEl.getContext('2d'),
+      gapX = 10
+
+
+    const field = {
+      w: window.innerWidth,
+      h: window.innerHeight,
+      draw: function () {
+        //draw the field
+        canvasCtx.fillStyle = "#286047"
+        canvasCtx.fillRect(0, 0, this.w, this.h)
+
+      }
+    }
+
+    const line = {
+      w: 15,
+      h: field.h,
+      draw: function () {
+        canvasCtx.fillStyle = "#ffffff"
+        // draw the central line
+        canvasCtx.fillRect(field.w / 2 - this.w / 2,
+          0,
+          this.w,
+          this.h
+        )
+      }
+    }
+
+    const leftPaddle = {
+      x: gapX,
+      y: 100,
+      w: line.w,
+      h: 200,
+      draw: function () {
+        //draw the left paddle ping pong 
+        canvasCtx.fillStyle = "#ffffff"
+        canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+      }
+    }
+    const rightPaddle = {
+      x: field.w - line.w - gapX,
+      y: 100,
+      w: line.w,
+      h: 200,
+      draw: function () {
+        //draw the left paddle ping pong 
+        canvasCtx.fillStyle = "#ffffff"
+        canvasCtx.fillRect(this.x, this.y, this.w, this.h)
+      }
+    }
 
     function setup() {
-      canvasEl.width = canvasCtx.width = window.innerWidth
-      canvasEl.height = canvasCtx.height = window.innerHeight
+      canvasEl.width = canvasCtx.width = field.w
+      canvasEl.height = canvasCtx.height = field.h
 
     }
 
     function draw() {
-      //draw the field
-      canvasCtx.fillStyle = "#286047"
-      canvasCtx.fillRect(0, 0, window.innerWidth, window.innerHeight)
-
-      canvasCtx.fillStyle = "#ffffff"
-
-      // draw the central line
-      canvasCtx.fillRect(window.innerWidth / 2 - lineWidth / 2,
-        0,
-        lineWidth,
-        window.innerHeight
-      )
-      //draw the left bar ping pong 
-      canvasCtx.fillRect(10, 100, lineWidth, 200)
-      //draw the right bar ping pong 
-      canvasCtx.fillRect(window.innerWidth - lineWidth - 10,
-        200,
-        lineWidth,
-        200)
+      field.draw()
+      line.draw()
+      leftPaddle.draw()
+      rightPaddle.draw()
 
       //draw the ball
       canvasCtx.beginPath()
