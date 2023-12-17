@@ -82,6 +82,12 @@
     const score = {
       human: 1,
       computer: 2,
+      increaseHuman: function () {
+        this.human++
+      },
+      increaseComputer: function () {
+        this.computer++
+      },
       draw: function () {
         //draw the score
         canvasCtx.font = "bold 72px Arial"
@@ -89,9 +95,7 @@
         canvasCtx.textBaseline = "top"
         canvasCtx.fillStyle = "#01341D"
         canvasCtx.fillText(this.human, field.w / 4, 50)
-        canvasCtx.fillText(this.computer, field.w / 4 + field.w / 2,
-          50
-        )
+        canvasCtx.fillText(this.computer, field.w / 4 + field.w / 2, 50)
       }
     }
     const ball = {
@@ -102,6 +106,32 @@
       directionX: 1,
       directionY: 1,
       _calcPosition: function () {
+        if (this.x > field.w - this.r - rightPaddle.w - gapX) {
+          if (this.y + this.r > rightPaddle.y &&
+            this.y - this.r < rightPaddle.y + rightPaddle.h
+          ) {
+            this._reverseX();
+          } else {
+            //count goal to player 1
+            score.increaseHuman(),
+              this._pointUp()
+          }
+        }
+
+        //verify if player 2 make the point
+        if (this.x < this.r + leftPaddle.w + gapX) {
+          //verify if there is left paddle in the ball position
+          if (this.y + this.r > leftPaddle.y &&
+            this.y - this.r < leftPaddle.y + leftPaddle.h
+          ) {
+            //reverse the ball inverting the directionX
+            this._reverseX();
+          } else {
+            score.increaseComputer(),
+              this._pointUp()
+          }
+        }
+
         //verify the right and left margins of the field
         if (
           (this.y - this.r < 0 && this.directionY < 0) ||
@@ -116,6 +146,10 @@
       },
       _reverseY: function () {
         this.directionY *= -1
+      },
+      _pointUp: function () {
+        this.x = field.w / 2;
+        this.y = field.h / 2;
       },
       _move: function () {
         this.x += this.directionX * this.speed
